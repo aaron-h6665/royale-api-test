@@ -1,18 +1,19 @@
 import SearchForm from "./components/SearchForm";
 import AnimatedContainer from './components/AnimatedComponent';
-import { motion } from 'framer-motion';
+import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 
 
-const rarityLevelOffset = {
-            Champion:  { levelOffset: 10},
-            Legendary: { levelOffset: 8},
-            Epic:      { levelOffset: 5 },
-            Rare:      { levelOffset: 2 },
-            Common:    { levelOffset: 0 },
-          };
+interface Card {
+  id: number;
+  name: string;
+  level: number;
+  iconUrls: {
+    medium: string;
+  };
+}
 
-export default async function Home({ searchParams }) {
-   const params = await searchParams;
+export default async function Home({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
+   const params = searchParams;
    const rawTag = params?.tag;
 
    let playerData = null;
@@ -53,12 +54,12 @@ export default async function Home({ searchParams }) {
  // 6. Render the UI
   return (
     // Flowing Gradient Background
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white p-8 font-sans selection:bg-pink-500">
+    <main className="min-h-screen br-linear-to-br from-slate-900 via-indigo-950 to-purple-950 text-white p-8 font-sans selection:bg-pink-500">
       <div className="max-w-4xl mx-auto">
         
         {/* Header Section */}
         <div className="text-center mb-10">
-          <h1 className="text-5xl font-extrabold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 drop-shadow-lg">
+          <h1 className="text-5xl font-extrabold mb-3 text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-purple-400 drop-shadow-lg">
             Clash Royale Tracker
           </h1>
           <p className="text-indigo-200/80 tracking-wide">Enter a player tag to reveal live battle stats.</p>
@@ -89,7 +90,7 @@ export default async function Home({ searchParams }) {
                 <div className="mb-4 md:mb-0">
                   <h2 className="text-4xl font-black text-white flex items-center gap-4">
                     {playerData.name} 
-                    <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-yellow-950 text-sm font-bold px-4 py-1.5 rounded-full shadow-lg shadow-yellow-500/30">
+                    <span className="bg-linear-to-r from-yellow-400 to-yellow-600 text-yellow-950 text-sm font-bold px-4 py-1.5 rounded-full shadow-lg shadow-yellow-500/30">
                       Level {playerData.expLevel}
                     </span>
                   </h2>
@@ -130,11 +131,11 @@ export default async function Home({ searchParams }) {
             <AnimatedContainer delay={0.5}>
             {playerData.currentDeck && (
               <div className="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-3xl shadow-xl">
-                <h3 className="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 inline-block">
+                <h3 className="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-400 inline-block">
                   Battle Deck
                 </h3>
                 <div className="grid grid-cols-4 md:grid-cols-8 gap-4">
-                  {playerData.currentDeck.map((card) => 
+                  {playerData.currentDeck.map((card : Card) => 
                     <div 
                       key={card.id} 
                       className="group flex flex-col items-center p-3 rounded-2xl hover:bg-white/10 transition-all duration-300 cursor-pointer"
@@ -159,8 +160,15 @@ export default async function Home({ searchParams }) {
   );
 }
 
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  icon: ReactNode;
+  glowColor?: string;
+}
+
 // 7. Updated Helper Component for Glassmorphism Cards
-function StatCard({ title, value, icon, glowColor }) {
+function StatCard( { title, value, icon, glowColor }: StatCardProps ) {
   return (
     <div className={`group bg-white/5 backdrop-blur-sm p-5 rounded-2xl border border-white/10 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-white/10 ${glowColor}`}>
       <div className="flex justify-between items-center mb-2">
