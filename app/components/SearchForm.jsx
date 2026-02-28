@@ -28,7 +28,11 @@ export default function SearchForm() {
                     placeholder="Player Tag"
                     value={tag}
                     onChange={(e) => setTag(e.target.value)}
-                    className="border border-gray-300 rounded px-4 py-2 w-full text-black"
+                    className="w-full px-4 py-2 rounded-lg
+           bg-white text-gray-900 border border-gray-300
+           dark:bg-white/10 dark:text-white dark:border-white/20
+           placeholder-gray-500 dark:placeholder-gray-400
+           focus:ring-2 focus:ring-purple-500"
                     required
                 />
                 <button 
